@@ -87,7 +87,7 @@ class Modified_VAE(BaseVAE):
         #Build Encoder
         #ResNet layer
         self.conv1 = nn.Conv2d(self.in_channels, self.inplanes, kernel_size=7, stride=2, padding=3,
-                               bias=False)                               #(64, 384, 640)
+                               bias=False)                               # Output size (C, H, W) = (64, 384, 640)
         self.bn1 = nn.BatchNorm2d(self.inplanes)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)   #(64, 192, 320)
@@ -211,12 +211,10 @@ class Modified_VAE(BaseVAE):
         :return: (Tensor) List of latent codes
         :return: (Tensor) List of multi-scale feature maps
         """
-        #print("Input size:", input.size())
-        #print("Encoding:....")
         #ResNet layer
-        x = self.conv1(input)
+        x = self.conv1(input)  #Output size (64, 384, 640)
         x = self.relu(x)
-        x = self.maxpool(x)
+        x = self.maxpool(x)  #(64, 192, 320)
         x1 = self.layer1(x)  #(64, 192, 320)
         x2 = self.layer2(x1) #(128, 96, 160)
         x3 = self.layer3(x2)  #(256, 48, 80)
@@ -241,7 +239,6 @@ class Modified_VAE(BaseVAE):
         :param z: (Tensor) [B x D]
         :return: (Tensor) [B x C x H x W]
         """
-        #print("Decoding Aux:....")
         x1, x2, x3, x4, x5 = x
         #Fc layer
         z = self.decoder_fc(z)
@@ -269,7 +266,6 @@ class Modified_VAE(BaseVAE):
         :return bb_pred: (Tensor) (G,4)
         :return cls_prob (Tensor) (G,5)
         """
-        #print("Decoding Pro:....")
         #Unpacking encoding multi-scale feature maps for skipping connection
         x1, x2, x3, x4, x5 = x
         #Fc layer
@@ -277,9 +273,9 @@ class Modified_VAE(BaseVAE):
         z = z.view(-1,512, 3, 5)
 
         #Trans Conv ResNet layer
-        z = self.de_layer1(z+x5)    (512, 6,10)
-        z = self.de_layer2(z)  (512, 12, 20)
-        z = self.de_layer3(z)   (512, 24, 40)
+        z = self.de_layer1(z+x5)    #(512, 6,10)
+        z = self.de_layer2(z)       #(512, 12, 20)
+        z = self.de_layer3(z)       #(512, 24, 40)
         z = self.de_layer4(z + x4)    #(256, 48, 80)
         z = self.de_layer5(z + x3)    #(128, 96, 160)
 
@@ -311,7 +307,6 @@ class Modified_VAE(BaseVAE):
         :param x: List(Tensor)
         :return: (Tensor) dictionary of bboxes, mask, class
         """
-        #print("Decoding Aug:....")
         ##Unpacking encoding multi-scale feature maps for skipping connection
         x1, x2, x3, x4, x5 = x
         #Fc layer
@@ -319,11 +314,12 @@ class Modified_VAE(BaseVAE):
         z = z.view(-1,512, 3, 5)
 
         #Trans Conv ResNet layer
-        z = self.de_layer1(z + x5)   (512, 6,10)
-        z = self.de_layer2(z)   (512, 12, 20)
-        z = self.de_layer3(z)   (512, 24, 40)
+        z = self.de_layer1(z + x5)   #(512, 6,10)
+        z = self.de_layer2(z)       #(512, 12, 20)
+        z = self.de_layer3(z)       #(512, 24, 40)
         z = self.de_layer4(z + x4)    #(256, 48, 80)
-        ft_maps = z + x3   #(256, 48, 80)
+        ft_maps = z + x3            #(256, 48, 80)
+
         #BBoxes matching cost with IoU, pairing with Hungarian algorithmn
         bboxes, ids = batch_bb_matching([bboxes_pro], [bboxes_mask_rcnn], last_id) 
         
