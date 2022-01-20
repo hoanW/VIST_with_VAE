@@ -10,7 +10,7 @@ from torch.utils.data import Dataset, DataLoader
 
 import pytorch_lightning as pl
 
-from .run import data_params
+from run import data_params
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 #Dataset for Mask-RCNN

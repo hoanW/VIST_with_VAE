@@ -1,9 +1,9 @@
 import os
 import torch
 
-from .model import get_instance_segmentation_model, get_object_detection_model, Modified_VAE
-from .dataset import AnimalsDataModule
-from .evaluation import MOTS_prediction, MOT_prediction, COCO_prediction
+from model import get_instance_segmentation_model, get_object_detection_model, Modified_VAE
+from dataset import AnimalsDataModule
+from evaluation import MOTS_prediction, MOT_prediction, COCO_prediction
 
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger

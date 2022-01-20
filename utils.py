@@ -1,6 +1,6 @@
 import numpy as np
 from PIL import Image
-from .run import data_params, model_params
+from run import data_params, model_params
 
 import torch
 from torchvision import transforms as T

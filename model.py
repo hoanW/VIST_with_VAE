@@ -9,8 +9,8 @@ from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
 from torchvision.models.resnet import conv1x1
 from typing import List
 
-from .run import model_params, mask_rcnn_model
-from .utils import BaseVAE, BasicBlock, RoIAlign, TransBasicBlock, apply_box_deltas, aug_postprocess, batch_bb_matching, pro_postprocess
+from run import model_params, mask_rcnn_model
+from utils import BaseVAE, BasicBlock, RoIAlign, TransBasicBlock, apply_box_deltas, aug_postprocess, batch_bb_matching, pro_postprocess
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 #Mask R-CNN

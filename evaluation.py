@@ -1,6 +1,6 @@
-from .dataset import Eval_Dataset, get_transform
-from .run.py import data_params
-from .utils import prediction, unmold_mask
+from dataset import Eval_Dataset, get_transform
+from run import data_params
+from utils import prediction, unmold_mask
 from torch.utils.data import DataLoader
 import numpy as np
 from pycocotools import mask as coco
